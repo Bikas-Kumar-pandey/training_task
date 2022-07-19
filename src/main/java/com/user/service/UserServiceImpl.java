@@ -1,7 +1,7 @@
 package com.user.service;
 
 
-//import com.user.dto.LoginRequest;
+
 import com.user.dto.UserRequest;
 import com.user.dto.UserResponse;
 import com.user.entity.UserAddressEntity;
@@ -23,7 +23,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public UserRequest userRegistration(UserRequest request) {
+    public UserRequest userRegistration(UserRequest request) throws Exception {
+        boolean b = userRepository.existsByEmail(request.getEmail());
+        if(b==true){
+            throw new Exception("Email id already Exists");
+        }
+
+
         UserEntity entity = new UserEntity();
 
         entity.setFirstName(request.getFirstName());
@@ -31,11 +37,6 @@ public class UserServiceImpl implements UserService {
         entity.setMobile(request.getMobile());
         entity.setEmail(request.getEmail());
         entity.setPassword(request.getPassword());
-        log.info(request.getFirstName());
-        log.info(request.getLastName());
-        log.info(request.getMobile());
-        log.info(request.getEmail());
-        log.info(request.getPassword());
 
         userRepository.save(entity);
         return request;
@@ -98,7 +99,7 @@ userRepository.save(userEntity);
             response.setLastName(entity.getLastName());
             response.setMobile(entity.getEmail());
             response.setEmail(entity.getEmail());
-//            log.info(response);
+
         }
 
         all.forEach(x -> {

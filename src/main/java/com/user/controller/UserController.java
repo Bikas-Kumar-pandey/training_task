@@ -1,7 +1,5 @@
 package com.user.controller;
-//
-//import com.user.dto.LoginRequest;
-import com.user.dto.UserAddress;
+
 import com.user.dto.UserRequest;
 import com.user.dto.UserResponse;
 import com.user.entity.UserAddressEntity;
@@ -22,7 +20,7 @@ public class UserController {
 
 
     @PostMapping("/user-details")
-    public UserRequest userRegistration(@RequestBody UserRequest request){
+    public UserRequest userRegistration(@RequestBody UserRequest request) throws Exception {
       return   userService.userRegistration(request);
     }
 
@@ -46,4 +44,3 @@ public class UserController {
 return userService.getAllUsersDetails();
     }
 }
-//simple

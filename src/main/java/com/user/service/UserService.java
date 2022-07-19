@@ -10,7 +10,7 @@ import com.user.entity.UserEntity;
 import java.util.List;
 
 public interface UserService {
-    UserRequest userRegistration(UserRequest request);
+    UserRequest userRegistration(UserRequest request) throws Exception;
 
     void logingPage(String email,String password) throws Exception;
 

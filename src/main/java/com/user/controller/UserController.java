@@ -46,3 +46,4 @@ public class UserController {
 return userService.getAllUsersDetails();
     }
 }
+//simple

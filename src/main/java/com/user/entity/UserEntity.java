@@ -1,6 +1,7 @@
 package com.user.entity;
 
 
+import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 //@RequiredArgsConstructor
 @Table(name="usr_detail")
+@EnableEncryptableProperties
 public class UserEntity {
     @Id
     @Column(name = "usr_id")

@@ -25,8 +25,8 @@ public class UserController {
     }
 
     @GetMapping("/login")
-    public void loginPage(@RequestParam("email")String email,@RequestParam("password") String password) throws Exception {
-       userService.logingPage(email,password);
+    public String loginPage(@RequestParam("email")String email,@RequestParam("password") String password) throws Exception {
+      return userService.logingPage(email,password);
     }
 
     @GetMapping("/find-user-by-id/{id}")
@@ -35,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/address/{id}")
-    public List<UserEntity> userAddress(@PathVariable int id,@RequestBody List<UserAddressEntity> userAddress) throws Exception {
+    public UserEntity userAddress(@PathVariable int id,@RequestBody List<UserAddressEntity> userAddress) throws Exception {
         return userService.userAddress(id,userAddress);
     }
 

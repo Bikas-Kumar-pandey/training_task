@@ -4,21 +4,16 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
 
 import javax.persistence.*;
 
+
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-//@RequiredArgsConstructor
-public class UserAddressEntity {
+public class Address {
     @Id
-    @GeneratedValue
-    @Column(name = "address_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-
-    private String addresses;
-
+    private String address;
 }

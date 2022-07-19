@@ -3,7 +3,8 @@ package com.user.service;
 //import com.user.dto.LoginRequest;
 import com.user.dto.UserRequest;
 import com.user.dto.UserResponse;
-import com.user.entity.UserAddressEntity;
+import com.user.entity.Address;
+
 import com.user.entity.UserEntity;
 
 import java.util.List;
@@ -15,7 +16,7 @@ public interface UserService {
 
     UserResponse findUserById(int id) throws Exception;
 
-    UserEntity userAddress(int id, List<UserAddressEntity> userAddress) throws Exception;
+    UserEntity addAddress(int id, List<Address> userAddress) throws Exception;
 
     List<UserEntity> getAllUsersDetails();
 

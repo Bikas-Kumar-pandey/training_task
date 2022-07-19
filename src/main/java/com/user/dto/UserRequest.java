@@ -10,5 +10,6 @@ public class UserRequest {
     private String mobile;
     private String email;
     private String password;
+    private String user;
 }
 

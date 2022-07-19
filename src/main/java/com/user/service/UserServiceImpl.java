@@ -4,7 +4,8 @@ package com.user.service;
 
 import com.user.dto.UserRequest;
 import com.user.dto.UserResponse;
-import com.user.entity.UserAddressEntity;
+import com.user.entity.Address;
+
 import com.user.entity.UserEntity;
 import com.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 
 @Service
 @Slf4j
@@ -26,44 +26,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserRequest userRegistration(UserRequest request) throws Exception {
-        boolean b = userRepository.existsByEmail(request.getEmail());
-        if(b==true){
-            throw new Exception("Email id already Exists");
-        }
-//        boolean valid = isValid(request);
-//        if(valid==false){
-//            throw new Exception("Please Enter vaid mail");
-//        }
-
         UserEntity entity = new UserEntity();
-
+       if( userRepository.existsByEmail(request.getEmail())){
+           throw new RuntimeException("Duplicate mail id");
+       }
+        if(userRepository.existsByMobile(request.getMobile())){
+            throw new RuntimeException("Mobile no: already exists");
+        }
+        entity.setEmail(request.getEmail());
+        entity.setMobile(request.getMobile());
         entity.setFirstName(request.getFirstName());
         entity.setLastName(request.getLastName());
-        entity.setMobile(request.getMobile());
-        entity.setEmail(request.getEmail());
         entity.setPassword(request.getPassword());
-
-//        String hashpw = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
-//        entity.setPassword(hashpw);
-//        log.info(hashpw);
-
-
         userRepository.save(entity);
-
         return request;
     }
-
-
-
-
-//    @Override
-//    public String logingPage(String email, String password) throws Exception {
-//        UserEntity byEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
-//        if (byEmailAndPassword == null) {
-//            throw new Exception("Please Enter Correct Email id and password.");
-//        } else
-//            return "Welcome, you have  successfully logged in ";
-//    }
 
     @Override
     public String logingPage(String user, String password) throws Exception {
@@ -81,7 +58,6 @@ public class UserServiceImpl implements UserService {
             } else {
                 throw new Exception("In correct user");
             }
-
         }
         return "wrong User";
     }
@@ -101,29 +77,27 @@ public class UserServiceImpl implements UserService {
         userResponse.setLastName(entity.getLastName());
         userResponse.setEmail(entity.getEmail());
         userResponse.setMobile(entity.getMobile());
-
-
         return userResponse;
     }
 
-
-
-    @Override
-    public UserEntity userAddress(int id, List<UserAddressEntity> userAddress) throws Exception {
+     @Override
+    public UserEntity addAddress(int id, List<Address> userAddress) throws Exception {
         Optional<UserEntity> byId = userRepository.findById(id);
-        if(!byId.isPresent()){
-            throw new Exception("User with given id is not present .");
+        if(byId.isEmpty()){
+            throw new Exception("User not present with id : "+id);
         }
-        UserEntity userEntity = byId.get();
+        UserEntity user = byId.get();
+        List<Address> addresses=null;
+        if(user.getUserAddresses()!=null){
+            addresses = user.getUserAddresses();
+        }else {
+            addresses=new ArrayList<>();
+        }
 
-        List<UserAddressEntity>userAddressEntityList = new ArrayList<>();
-for (UserAddressEntity entity:userAddress){
-    UserAddressEntity addressEntity = new UserAddressEntity();
-    addressEntity.setAddresses(entity.getAddresses());
-    userAddressEntityList.add(addressEntity);
-}
-        userEntity.setUserAddresses(userAddressEntityList);
-return userRepository.save(userEntity);
+        addresses.addAll(userAddress);
+
+        user.setUserAddresses(addresses);
+        return userRepository.save(user);
 
 
     }
@@ -136,9 +110,6 @@ return userRepository.save(userEntity);
             response.setId(entity.getId());
             response.setFirstName(entity.getFirstName());
             response.setLastName(entity.getLastName());
-            response.setMobile(entity.getEmail());
-            response.setEmail(entity.getEmail());
-
         }
 
         all.forEach(x -> {
@@ -162,20 +133,20 @@ return all;
      }
         return null;
     }
+//--------------------------------------------------------------------------------------------------------
 
-
-    public static boolean isValid(UserRequest request)
-    {
-        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
-                "[a-zA-Z0-9_+&*-]+)*@" +
-                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
-                "A-Z]{2,7}$";
-
-        Pattern pat = Pattern.compile(emailRegex);
-        if (request.getEmail() == null)
-            return false;
-        return pat.matcher(request.getEmail()).matches();
-    }
+//    public static boolean isValid(UserRequest request)
+//    {
+//        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\."+
+//                "[a-zA-Z0-9_+&*-]+)*@" +
+//                "(?:[a-zA-Z0-9-]+\\.)+[a-z" +
+//                "A-Z]{2,7}$";
+//
+//        Pattern pat = Pattern.compile(emailRegex);
+//        if (request.getEmail() == null)
+//            return false;
+//        return pat.matcher(request.getEmail()).matches();
+//    }
 
 //    public static void main(String[] args)
 //    {

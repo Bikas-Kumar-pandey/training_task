@@ -12,7 +12,7 @@ import java.util.List;
 
 @NoArgsConstructor
 @AllArgsConstructor
-//@RequiredArgsConstructor
+
 @Table(name="usr_detail")
 @EnableEncryptableProperties
 public class UserEntity {
@@ -23,15 +23,18 @@ public class UserEntity {
     private int id;
     private String firstName;
     private String lastName;
+
     private String mobile;
+
     private String email;
     private String password;
+    private String user;
 
 
 
     @OneToMany(cascade =CascadeType.ALL)
     @JoinColumn(name = "fk_usr")
-    private List<UserAddressEntity> userAddresses;
+    private List<Address> userAddresses;
 
 
 }

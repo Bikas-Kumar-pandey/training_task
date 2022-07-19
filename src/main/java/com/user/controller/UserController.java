@@ -5,6 +5,7 @@ import com.user.dto.UserResponse;
 import com.user.entity.UserAddressEntity;
 import com.user.entity.UserEntity;
 import com.user.service.UserService;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class UserController {
     }
 
     @GetMapping("/find-user-by-id/{id}")
-    public UserResponse findUserById(@PathVariable int id){
+    public UserResponse findUserById(@PathVariable int id) throws Exception {
      return    userService.findUserById(id);
     }
 
@@ -43,4 +44,11 @@ public class UserController {
     public List<UserEntity> getAllUsersDetails(){
 return userService.getAllUsersDetails();
     }
+
+
+    @GetMapping("/password/{password}")
+    public Boolean checkPassword(@PathVariable String password){
+       return userService.checkPassword(password);
+    }
+
 }

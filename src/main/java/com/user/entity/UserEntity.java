@@ -28,6 +28,7 @@ public class UserEntity {
     private String password;
 
 
+
     @OneToMany(cascade =CascadeType.ALL)
     @JoinColumn(name = "fk_usr")
     private List<UserAddressEntity> userAddresses;

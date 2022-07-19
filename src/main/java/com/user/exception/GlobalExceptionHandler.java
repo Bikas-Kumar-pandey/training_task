@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) throws Exception {
-        var errorResponse = com.user.exception.ErrorResponse.builder().errorMessage(ex.getMessage()).time(LocalDateTime.now()).build();
+        var errorResponse = com.user.exception.ErrorResponse.builder().errorMessage(ex.getMessage()).build();
         return  new ResponseEntity<com.user.exception.ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
 
     }

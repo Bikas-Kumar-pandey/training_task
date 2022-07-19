@@ -30,10 +30,10 @@ public class UserServiceImpl implements UserService {
         if(b==true){
             throw new Exception("Email id already Exists");
         }
-        boolean valid = isValid(request);
-        if(valid==false){
-            throw new Exception("Please Enter vaid mail");
-        }
+//        boolean valid = isValid(request);
+//        if(valid==false){
+//            throw new Exception("Please Enter vaid mail");
+//        }
 
         UserEntity entity = new UserEntity();
 
@@ -43,25 +43,56 @@ public class UserServiceImpl implements UserService {
         entity.setEmail(request.getEmail());
         entity.setPassword(request.getPassword());
 
+//        String hashpw = BCrypt.hashpw(request.getPassword(), BCrypt.gensalt());
+//        entity.setPassword(hashpw);
+//        log.info(hashpw);
+
 
         userRepository.save(entity);
 
         return request;
     }
 
+
+
+
+//    @Override
+//    public String logingPage(String email, String password) throws Exception {
+//        UserEntity byEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
+//        if (byEmailAndPassword == null) {
+//            throw new Exception("Please Enter Correct Email id and password.");
+//        } else
+//            return "Welcome, you have  successfully logged in ";
+//    }
+
     @Override
-    public String logingPage(String email, String password) throws Exception {
-        UserEntity byEmailAndPassword = userRepository.findByEmailAndPassword(email, password);
-        if (byEmailAndPassword == null) {
-            throw new Exception("Please Enter Correct Email id and password.");
-        } else
-            return "Welcome, you have  successfully logged in ";
+    public String logingPage(String user, String password) throws Exception {
+
+        if (userRepository.existsByEmail(user) || userRepository.existsByMobile(user)) {
+            UserEntity users = null;
+            if (userRepository.existsByEmail(user)) {
+                users = userRepository.findByEmail(user);
+            } else {
+                users = userRepository.findByMobile(user);
+            }
+            String passwords = users.getPassword();
+            if (passwords.equals(password)) {
+                return "Welcome, you have  successfully logged in ";
+            } else {
+                throw new Exception("In correct user");
+            }
+
+        }
+        return "wrong User";
     }
 
     @Override
-    public UserResponse findUserById(int id) {
+    public UserResponse findUserById(int id) throws Exception {
 
         Optional<UserEntity> byId = userRepository.findById(id);
+        if(byId.isEmpty()){
+            throw new Exception("Invalid user id , please check  ");
+        }
         UserResponse userResponse = new UserResponse();
 
         UserEntity entity = byId.get();
@@ -87,9 +118,9 @@ public class UserServiceImpl implements UserService {
 
         List<UserAddressEntity>userAddressEntityList = new ArrayList<>();
 for (UserAddressEntity entity:userAddress){
-    UserAddressEntity address =new UserAddressEntity();
-    address.setAddresses(entity.getAddresses());
-    userAddressEntityList.add(address);
+    UserAddressEntity addressEntity = new UserAddressEntity();
+    addressEntity.setAddresses(entity.getAddresses());
+    userAddressEntityList.add(addressEntity);
 }
         userEntity.setUserAddresses(userAddressEntityList);
 return userRepository.save(userEntity);
@@ -118,6 +149,19 @@ return all;
 
     }
 
+    @Override
+    public Boolean checkPassword(String  password) {
+        String  byPassword = userRepository.existsByPassword(password);
+        log.info(byPassword);
+        String  checkpw = String.valueOf(BCrypt.checkpw(password, byPassword));
+
+     if(BCrypt.checkpw(password, checkpw)) {
+         log.info("true");
+     }else{
+         log.info("Not match");
+     }
+        return null;
+    }
 
 
     public static boolean isValid(UserRequest request)

@@ -13,9 +13,11 @@ public interface UserService {
 
     String logingPage(String email,String password) throws Exception;
 
-    UserResponse findUserById(int id);
+    UserResponse findUserById(int id) throws Exception;
 
     UserEntity userAddress(int id, List<UserAddressEntity> userAddress) throws Exception;
 
     List<UserEntity> getAllUsersDetails();
+
+    Boolean checkPassword(String password);
 }
